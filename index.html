@@ -45,7 +45,7 @@
         const resultDiv = document.getElementById('result');
 
         // 查询逻辑
-        const student = scoreData.find(s => s.name === name && s.id === stuID);
+        const student = scoreData.find(s => s.name === name && s.stuID === stuID);
 
         resultDiv.style.display = "block";
         if (student) {
@@ -58,6 +58,7 @@
 
 </body>
 </html>
+
 
 
 
