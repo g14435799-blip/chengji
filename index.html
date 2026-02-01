@@ -3,13 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>学生成绩快速查询</title>
+    <title>成绩查询系统</title>
     <style>
-        body { font-family: sans-serif; display: flex; justify-content: center; padding-top: 50px; background: #f4f7f6; }
-        .card { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); width: 300px; }
-        input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
-        button { width: 100%; padding: 10px; background: #07c160; color: white; border: none; border-radius: 4px; cursor: pointer; }
-        #result { margin-top: 20px; padding: 10px; border-top: 1px dashed #ccc; display: none; }
+        body { font-family: -apple-system, sans-serif; display: flex; justify-content: center; padding: 40px 20px; background: #f0f2f5; }
+        .card { background: white; padding: 24px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 100%; max-width: 350px; text-align: center; }
+        h3 { color: #1a1a1a; margin-bottom: 20px; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #d9d9d9; border-radius: 6px; box-sizing: border-box; font-size: 16px; outline: none; }
+        input:focus { border-color: #07c160; }
+        button { width: 100%; padding: 12px; background: #07c160; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; margin-top: 10px; font-weight: bold; }
+        button:active { background: #06ae56; }
+        #result { margin-top: 20px; padding: 15px; border-top: 1px dashed #eee; display: none; text-align: left; line-height: 1.6; font-size: 14px; color: #333; }
+        .success { color: #07c160; font-weight: bold; margin-bottom: 8px; display: block; }
+        .error { color: #ff4d4f; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -24,40 +29,43 @@
 </div>
 
 <script>
-    // 这里就是你的“数据库”，你可以手动添加或修改数据
+    // 你的数据库
     const scoreData = [
-  { name: "粟若冰", stuID: "155124", score: "语文: 67.5, 英语: 80.0, 数学: 48.0, 科学: 35.0, 道德与法治: 32.5, 总分: 263.0" },
-  { name: "胡佳豪", stuID: "154589", score: "语文: 56.0, 英语: 53.0, 数学: 18.0, 科学: 38.5, 道德与法治: 30.5, 总分: 196.0" },
-  { name: "周玉才", stuID: "173196", score: "语文: 34.5, 英语: 54.0, 数学: 22.0, 科学: 34.0, 道德与法治: 28.5, 总分: 173.0" },
-  { name: "黄健妮", stuID: "155126", score: "语文: 72.0, 英语: 68.0, 数学: 77.5, 科学: 34.5, 道德与法治: 36.5, 总分: 288.5" },
-  { name: "黄振祺", stuID: "155114", score: "语文: 63.0, 英语: 72.5, 数学: 20.5, 科学: 42.0, 道德与法治: 33.5, 总分: 231.5" },
-  { name: "刘偲语", stuID: "155130", score: "语文: 79.0, 英语: 94.0, 数学: 65.5, 科学: 45.0, 道德与法治: 37.5, 总分: 321.0" },
-  { name: "张武怡", stuID: "173269", score: "语文: 59.5, 英语: 67.5, 数学: 28.0, 科学: 33.5, 道德与法治: 24.5, 总分: 213.0" },
-  { name: "龙宇翔", stuID: "173198", score: "语文: 52.0, 英语: 46.0, 数学: 21.0, 科学: 36.5, 道德与法治: 26.0, 总分: 181.5" },
-  { name: "陈鑫悦", stuID: "85109", score: "语文: 59.5, 英语: 48.5, 数学: 22.0, 科学: 34.5, 道德与法治: 32.0, 总分: 196.5" },
-  { name: "胡家骐", stuID: "151286", score: "语文: 60.5, 英语: 79.0, 数学: 45.5, 科学: 39.0, 道德与法治: 34.0, 总分: 258.0" },
-  { name: "刘骏杰", stuID: "195766", score: "语文: 51.0, 英语: 31.5, 数学: 25.0, 科学: 29.5, 道德与法治: 27.5, 总分: 164.5" }
+        { name: "粟若冰", stuID: "155124", score: "语文: 67.5, 英语: 80.0, 数学: 48.0, 科学: 35.0, 道德与法治: 32.5, 总分: 263.0" },
+        { name: "胡佳豪", stuID: "154589", score: "语文: 56.0, 英语: 53.0, 数学: 18.0, 科学: 38.5, 道德与法治: 30.5, 总分: 196.0" },
+        { name: "周玉才", stuID: "173196", score: "语文: 34.5, 英语: 54.0, 数学: 22.0, 科学: 34.0, 道德与法治: 28.5, 总分: 173.0" },
+        { name: "黄健妮", stuID: "155126", score: "语文: 72.0, 英语: 68.0, 数学: 77.5, 科学: 34.5, 道德与法治: 36.5, 总分: 288.5" },
+        { name: "黄振祺", stuID: "155114", score: "语文: 63.0, 英语: 72.5, 数学: 20.5, 科学: 42.0, 道德与法治: 33.5, 总分: 231.5" },
+        { name: "刘偲语", stuID: "155130", score: "语文: 79.0, 英语: 94.0, 数学: 65.5, 科学: 45.0, 道德与法治: 37.5, 总分: 321.0" },
+        { name: "张武怡", stuID: "173269", score: "语文: 59.5, 英语: 67.5, 数学: 28.0, 科学: 33.5, 道德与法治: 24.5, 总分: 213.0" },
+        { name: "龙宇翔", stuID: "173198", score: "语文: 52.0, 英语: 46.0, 数学: 21.0, 科学: 36.5, 道德与法治: 26.0, 总分: 181.5" },
+        { name: "陈鑫悦", stuID: "85109",  score: "语文: 59.5, 英语: 48.5, 数学: 22.0, 科学: 34.5, 道德与法治: 32.0, 总分: 196.5" },
+        { name: "胡家骐", stuID: "151286", score: "语文: 60.5, 英语: 79.0, 数学: 45.5, 科学: 39.0, 道德与法治: 34.0, 总分: 258.0" },
+        { name: "刘骏杰", stuID: "195766", score: "语文: 51.0, 英语: 31.5, 数学: 25.0, 科学: 29.5, 道德与法治: 27.5, 总分: 164.5" }
     ];
 
     function search() {
-        const name = document.getElementById('name').value.trim();
-        const stuID = document.getElementById('stuID').value.trim();
+        const nameVal = document.getElementById('name').value.trim();
+        const idVal = document.getElementById('stuID').value.trim();
         const resultDiv = document.getElementById('result');
 
-        // 查询逻辑
-        const student = scoreData.find(s => s.name === name && s.stuID === stuID);
+        // 查找逻辑
+        const student = scoreData.find(s => s.name === nameVal && s.stuID === idVal);
 
         resultDiv.style.display = "block";
         if (student) {
-            resultDiv.innerHTML = `<strong style="color:green;">查询成功！</strong><br>${student.score}`;
+            resultDiv.innerHTML = `<span class="success">查询成功！</span>
+                                   <strong>姓名：</strong>${student.name}<br>
+                                   <strong>成绩详情：</strong><br>${student.score.replace(/,/g, '<br>')}`;
         } else {
-            resultDiv.innerHTML = `<strong style="color:red;">查无此人</strong><br>请检查姓名和学号是否正确。`;
+            resultDiv.innerHTML = `<span class="error">查询失败</span><br>查无此人，请确认姓名和学号输入正确。`;
         }
     }
 </script>
 
 </body>
 </html>
+
 
 
 
