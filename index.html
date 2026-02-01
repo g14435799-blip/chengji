@@ -9,11 +9,9 @@
         .card { background: white; padding: 24px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 100%; max-width: 350px; text-align: center; }
         h3 { color: #1a1a1a; margin-bottom: 20px; }
         input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #d9d9d9; border-radius: 6px; box-sizing: border-box; font-size: 16px; outline: none; }
-        input:focus { border-color: #07c160; }
         button { width: 100%; padding: 12px; background: #07c160; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; margin-top: 10px; font-weight: bold; }
-        button:active { background: #06ae56; }
-        #result { margin-top: 20px; padding: 15px; border-top: 1px dashed #eee; display: none; text-align: left; line-height: 1.6; font-size: 14px; color: #333; }
-        .success { color: #07c160; font-weight: bold; margin-bottom: 8px; display: block; }
+        #result { margin-top: 20px; padding: 15px; border-top: 1px dashed #eee; display: none; text-align: left; line-height: 1.8; font-size: 14px; }
+        .success { color: #07c160; font-weight: bold; }
         .error { color: #ff4d4f; font-weight: bold; }
     </style>
 </head>
@@ -24,12 +22,10 @@
     <input type="text" id="name" placeholder="请输入姓名">
     <input type="text" id="stuID" placeholder="请输入学号">
     <button onclick="search()">点击查询</button>
-
     <div id="result"></div>
 </div>
 
 <script>
-    // 你的数据库
     const scoreData = [
         { name: "粟若冰", stuID: "155124", score: "语文: 67.5, 英语: 80.0, 数学: 48.0, 科学: 35.0, 道德与法治: 32.5, 总分: 263.0" },
         { name: "胡佳豪", stuID: "154589", score: "语文: 56.0, 英语: 53.0, 数学: 18.0, 科学: 38.5, 道德与法治: 30.5, 总分: 196.0" },
@@ -43,28 +39,29 @@
         { name: "胡家骐", stuID: "151286", score: "语文: 60.5, 英语: 79.0, 数学: 45.5, 科学: 39.0, 道德与法治: 34.0, 总分: 258.0" },
         { name: "刘骏杰", stuID: "195766", score: "语文: 51.0, 英语: 31.5, 数学: 25.0, 科学: 29.5, 道德与法治: 27.5, 总分: 164.5" }
     ];
-   function search() {
+
+    function search() {
+        // 删掉了多余的逗号，统一了变量获取
         const nameVal = document.getElementById('name').value.trim();
         const idVal = document.getElementById('stuID').value.trim();
         const resultDiv = document.getElementById('result');
 
-        // 查找逻辑
+        // 匹配姓名和学号
         const student = scoreData.find(s => s.name === nameVal && s.stuID === idVal);
 
         resultDiv.style.display = "block";
         if (student) {
-            resultDiv.innerHTML = `<span class="success">查询成功！</span>
-                                   <strong>姓名：</strong>${student.name}<br>
-                                   <strong>成绩详情：</strong><br>${student.score.replace(/,/g, '<br>')}`;
+            // 使用 <br> 替换逗号让成绩分行显示，更美观
+            resultDiv.innerHTML = `<span class="success">查询成功！</span><br>
+                                   <strong>成绩详情：</strong><br>${student.score.replace(/, /g, '<br>')}`;
         } else {
-            resultDiv.innerHTML = `<span class="error">查询失败</span><br>查无此人，请确认姓名和学号输入正确。`;
+            resultDiv.innerHTML = `<span class="error">查无此人</span><br>请检查姓名和学号是否匹配，且无多余空格。`;
         }
     }
 </script>
 
 </body>
 </html>
-
 
 
 
